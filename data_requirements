@@ -1,0 +1,131 @@
+Data Requirements
+
+This repository includes events_final.csv, which contains the final cleaned event dataset used in the thesis. Users do not need to reconstruct the event dataset. The file should enter the R script already clean and should not require additional manual recoding, duplicate removal, or category unification.
+
+The empirical analysis also requires external market data files that are not redistributed with this repository. The stock market data used in the thesis were obtained from Refinitiv Workspace Lite, as described in the thesis. Users who reproduce the analysis must provide equivalent daily market data from an authorized or reliable source.
+
+All required CSV files must be placed in the same folder as the R script. Dates must be in YYYY-MM-DD format. Returns should be daily log returns unless otherwise stated. Country names must match the country names used in events_final.csv. No imputation is performed for missing returns.
+
+Required input files:
+
+1. events_final.csv
+
+Description:
+Final cleaned event dataset used in the thesis.
+
+Required columns:
+date | Event date. Format: YYYY-MM-DD.
+description | Brief description of the event.
+event_type | Original event type.
+disruption_type | Original disruption type.
+deaths | Number of fatalities.
+total_injuries | Number of injured individuals.
+cancellation | Binary indicator for whether the event was stopped, suspended, or cancelled.
+country | Country where the event occurred.
+city_region | City or region where the event occurred.
+source_s | Source or sources used to verify the event.
+event_type_agg | Aggregated event type used in the econometric analysis.
+disruption_type_agg | Aggregated disruption type used in the econometric analysis.
+
+Notes:
+The file included in the repository is already cleaned.
+The script uses event_type_agg and disruption_type_agg directly.
+Users should not manually recode categories before running the script.
+
+2. indices_daily.csv
+
+Description:
+Daily national stock market index data used for the country-level event study.
+
+Required columns:
+date | Trading date. Format: YYYY-MM-DD.
+ticker | National stock market index ticker.
+close | Daily index closing price. Kept for reference.
+country | Country corresponding to the stock index. Must match events_final.csv.
+ret | Daily log return of the national stock market index.
+
+Notes:
+The script uses ret directly. Users should provide daily log returns.
+Country names should be standardized. In particular:
+USA should be written as United States.
+UK should be written as United Kingdom.
+CzechRepublic should be written as Czech Republic.
+SouthKorea should be written as South Korea.
+
+3. acwi_daily.csv
+
+Description:
+Daily MSCI ACWI benchmark series used as the global market benchmark.
+
+Required columns:
+date | Trading date. Format: YYYY-MM-DD.
+acwi_ret | Daily log return of MSCI ACWI.
+
+Optional columns:
+acwi_index | MSCI ACWI index level. Kept for reference.
+
+Notes:
+The script uses acwi_ret directly. Users should provide daily log returns for MSCI ACWI.
+
+4. vix_daily.csv
+
+Description:
+Daily VIX series used to construct the global uncertainty control.
+
+Required columns:
+date | Trading date. Format: YYYY-MM-DD.
+vix | Daily VIX level.
+
+Derived variable:
+dvix is computed internally by the R script as log(vix_t) - log(vix_{t-1}).
+
+Notes:
+Users should provide VIX levels, not VIX returns.
+If a dvix column is already present in the file, the script will keep it, but the intended input is the VIX level column named vix.
+
+5. msci_regional_daily.csv
+
+Description:
+Daily MSCI regional index returns used in the extended market model.
+
+Required columns:
+date | Trading date. Format: YYYY-MM-DD.
+region | MSCI regional group.
+msci_reg_ret | Daily log return of the MSCI regional index.
+
+Expected region values:
+Asia Pacific
+Emerging Markets
+Europe
+North America
+
+Notes:
+The script uses msci_reg_ret directly. Users should provide daily log returns.
+The region names must match the region labels used in the country-region mapping inside the R script.
+
+6. sectoral_daily.csv
+
+Description:
+Daily sectoral index data used in the sectoral analysis.
+
+Required columns:
+date | Trading date. Format: YYYY-MM-DD.
+sector_group | Sectoral market group used in the analysis.
+ticker | Sectoral index ticker.
+close | Daily sectoral index closing price. Kept for reference.
+ret | Daily log return of the sectoral index.
+
+Expected sectoral series used in the thesis:
+sector_group = USA, ticker = SPLRCD
+sector_group = Europe, ticker = SXTP
+
+Notes:
+The script uses ret directly. Users should provide daily log returns.
+
+General notes:
+The event dataset is included in the repository as events_final.csv.
+The external market data files are not redistributed.
+Users should provide equivalent daily market data from an authorized or reliable source.
+All required CSV files should be placed in the same folder as the R script.
+Small numerical differences may occur if users rely on different data providers, price adjustments, trading calendars, return construction procedures, or data vintages.
+The expected number of events in events_final.csv is 267. The analytical sample used in the thesis contains 266 events after one event is excluded due to insufficient stock index coverage.
